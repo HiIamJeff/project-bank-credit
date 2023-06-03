@@ -1,0 +1,19 @@
+local_command.sh
+spark.ipynb
+.DS_Store
+__pycache__/
+.idea/
+.ipynb_checkpoints/
+
+# exclude data but keep directories
+data/*
+!data/source
+data/source/*
+!data/source/.gitkeep
+!data/source/demographic_data
+data/source/demographic_data/*
+!data/source/demographic_data/.gitkeep
+
+!data/processed
+data/processed/*
+!data/processed/.gitkeep
