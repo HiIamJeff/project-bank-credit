@@ -38,7 +38,7 @@ def generate_monthly_report(df, output_path, input_year, month, spark):
     """
     df.createOrReplaceTempView('monthly_credit_score_tmp')
     df_result = spark.sql("""
-    SELECT zip5 AS zip5
+    SELECT zip5 AS zip5, state AS state
         , AVG(bankcard_limit) AS bankcard_limit_avg
         , AVG(bankcard_balance) AS bankcard_balance_avg
         , AVG(bankcard_trades) AS bankcard_trades_avg
@@ -49,7 +49,7 @@ def generate_monthly_report(df, output_path, input_year, month, spark):
         , SUM(homebuyers) AS homebuyers_total
         , SUM(first_homebuyers) AS first_homebuyers_total
     FROM monthly_credit_score_tmp
-    GROUP BY zip5
+    GROUP BY zip5, state
     """)
 
     # create report subdirectory for the report CSV
