@@ -1,7 +1,7 @@
 # project-bank-credit
 Showcase for modern data engineering with Spark and Polars
 
-### [UNDER DEVELOPMENT for sample data, the demo app and the Polars part]
+### [UNDER DEVELOPMENT for the Polars part]
 
 ### Purpose
 The project is a personal practice and showcase for how pipelines built with [Apache Spark](https://spark.apache.org/) or [Polars](https://www.pola.rs/) can do ETL/ELT. The applications could be run locally or hosted on public cloud services with some modifications. With the appropriate settings, the pipelines could also handle data volume from a few GBs to TB-level data (Spark, specifically). 
@@ -25,11 +25,11 @@ The total data size is about 10 GB. Nonetheless, the pipelines are designed for 
 > All datasets are from Brown Datathon 2020 event and the actual zip9 value has been coded. The datasets are only for educational purposes and are not intended for other purposes.   
 
 ### Instruction
-For anyone who is interested in trying this repo themselves, [the Google Drive folder](https://drive.google.com/drive/u/0/folders/1D-DVKXOFfkN1QkwV8PZ2h83AL8wA6Rov) has sample data. It is the same data but with only roughly 1% of the records (zip codes only within New York City). Please place them following the Folder Structure section. Though the small data volume may not fully utilize these frameworks, it is still a good starting ground and can be replicated with other big data project.
+For anyone interested in trying this repo themselves, [the Google Drive folder](https://drive.google.com/drive/u/0/folders/1D-DVKXOFfkN1QkwV8PZ2h83AL8wA6Rov) has sample data. It is the same data but with roughly 0.05% of the records (zip codes only within New York City). Please place them following the Folder Structure section. Though the small data volume may not fully utilize these frameworks, it is still a good starting ground and can be replicated with other big data project.
 
-Please use requirement.txt to create a virtual environment with Python 3.9+ and set up Spark on your machine. For actual Spark application, it is best to run this with Standalone mode (setting up Spark driver/worker, submitting jobs to launch the application)
+Please use requirement.txt to create a virtual environment with Python 3.9+ and set up Spark on your machine. For actual Spark application, it is best to run this with Standalone mode (setting up Spark driver/worker, submitting jobs to launch the application). For launching it, please check examples in `cli_examples.sh` (as well as for the Streamlit app)
 
-> p.s. Setting Spark on any environments could be a fuzzy task. You can refer to this [simple guide](https://www.sundog-education.com/spark-python/) or any other resources to set up correctly. You can also check examples in `cli_examples.sh` for your own testing
+> p.s. Setting Spark on any environments could be a fuzzy task. You can refer to this [simple guide](https://www.sundog-education.com/spark-python/) or any other resources to set up correctly.
 
 
 ### Folder Structure
@@ -54,13 +54,21 @@ Please use requirement.txt to create a virtual environment with Python 3.9+ and 
 ├── monthly_transformation_script.py
 ├── raw_ingestion.py
 ├── requirements.txt
+├── streamlit_app
+│   ├── README.md
+│   ├── app.py
+│   ├── list_zipcode_nyc.pkl
+│   ├── streamlit_script.py
+│   └── zipcode_2020_shape_simplified.geojson
 ```
+
 #### Future development
 Some ideas that can expand the project furthermore:
 - Setting up an orchestration tool (e.g., Airflow, Prefect) to make this process a monthly schedule task
 - Modifying the batch job to be a streaming process (Structured Streaming) to run every time the new/updated data comes in
-- Setting up another process to train machine learning models with the latest data
+- Setting up another process to re-train machine learning models with the latest data
 - Setting up JDBC drivers to read/write data from/to external database systems (e.g., Postgres)
+- Extending the project by exporting wide tables in the final stage and connect those with BI platforms on cloud services (e.g., BigQuery with Looker)
 
 ## Contacts
 Please let me know if you have any thought on this project.
