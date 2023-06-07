@@ -17,3 +17,6 @@ spark-submit --master <spark-master-url> --name applicationstream_sample \
 spark-submit --master <spark-master-url> --name applicationstream_sample \
 --num-executors 2 --executor-memory 2g \
 --driver-memory 2g raw_ingestion.py --input_year=2019 --ingestion_mode=overwrite --input_month 4 --test_run True
+
+# Run streamlit app (please be sure launch it at the project root directory)
+streamlit run streamlit_app/app.py
