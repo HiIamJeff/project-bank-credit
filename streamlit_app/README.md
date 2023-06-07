@@ -2,7 +2,8 @@
 
 The app shows the basic aggregated metrics on a map and also offers an intuitive way to review the raw report records
 
-
+![](https://github.com/HiIamJeff/project-bank-credit/blob/main/assets/app_part1.gif)
+![](https://github.com/HiIamJeff/project-bank-credit/blob/main/assets/app_part2.gif)
 
 ### Supplement files
 - zipcode_2020_shape_simplified.geojson
