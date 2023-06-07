@@ -1,7 +1,7 @@
 # project-bank-credit
 Showcase for modern data engineering with Spark and Polars
 
-### [UNDER DEVELOPMENT for the Polars part]
+### [UNDER DEVELOPMENT for sample data, the demo app and the Polars part]
 
 ### Purpose
 The project is a personal practice and showcase for how pipelines built with [Apache Spark](https://spark.apache.org/) or [Polars](https://www.pola.rs/) can do ETL/ELT. The applications could be run locally or hosted on public cloud services with some modifications. With the appropriate settings, the pipelines could also handle data volume from a few GBs to TB-level data (Spark, specifically). 
@@ -12,6 +12,8 @@ Here are a few things that the pipelines cover:
 - Cleaning and transforming monthly data with business logic and geographic information 
 - Outputting the results in Parquet for further purposes (analysis or model training)
 - Generating monthly-aggregated reports in CSVs at the end of a job run
+- Firing a self-service report application (built by [Streamlit](https://streamlit.io/)) that shows a choropleth map with various measures and an interactive dataframe viewer
+  - For more details, please check `README.md` in `streamlit_app/`
 - Being able to run jobs for monthly process, full migration (by years), or test mode (with limited records)
 
 ### Data
@@ -23,7 +25,7 @@ The total data size is about 10 GB. Nonetheless, the pipelines are designed for 
 > All datasets are from Brown Datathon 2020 event and the actual zip9 value has been coded. The datasets are only for educational purposes and are not intended for other purposes.   
 
 ### Instruction
-For anyone who is interested in trying this repo themselves, [the Google Drive folder](https://drive.google.com/drive/u/0/folders/1D-DVKXOFfkN1QkwV8PZ2h83AL8wA6Rov) has sample data. It is the same data but with only 1% of the records. Please place them following the Folder Structure section. Though the small data volume may not fully utilize these frameworks, it is still a good starting ground and can be replicated with other big data project.
+For anyone who is interested in trying this repo themselves, [the Google Drive folder](https://drive.google.com/drive/u/0/folders/1D-DVKXOFfkN1QkwV8PZ2h83AL8wA6Rov) has sample data. It is the same data but with only roughly 1% of the records (zip codes only within New York City). Please place them following the Folder Structure section. Though the small data volume may not fully utilize these frameworks, it is still a good starting ground and can be replicated with other big data project.
 
 Please use requirement.txt to create a virtual environment with Python 3.9+ and set up Spark on your machine. For actual Spark application, it is best to run this with Standalone mode (setting up Spark driver/worker, submitting jobs to launch the application)
 
