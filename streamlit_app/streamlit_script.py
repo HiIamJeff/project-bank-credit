@@ -5,6 +5,7 @@ import plotly.express as px
 import json
 import pickle
 import re
+import geopandas
 
 import streamlit as st
 
@@ -111,4 +112,19 @@ def generate_st_filter_df(df):
                     df = df[df[column].astype(str).str.contains(user_text_input, flags=re.IGNORECASE)]
     return df
 
+
+def simplify_shp_file_to_geojson(input_path_shp, level=200, output_path='new_shape.geojson'):
+    """Process shape files (simplify it and convert it into geojson)
+    p.s. the higher the level is, the more generalization it would get
+    """
+    geopandas_df_shp = geopandas.read_file(input_path_shp)
+    df_new = geopandas_df_shp.copy(deep=True)
+    geocol = df_new.pop('geometry')
+    df_new.insert(0, 'geometry', geocol)
+    # df_new = df_new[df_new['ZCTA5CE20'].isin(list_zipcode_nyc)] # for further filtering
+    df_new.dropna(axis=0, subset='geometry', how='any', inplace=True) #need to drop None value rows for the geometry to be simplified below
+    df_new["geometry"] = (df_new.to_crs(df_new.estimate_utm_crs()).simplify(level).to_crs(df_new.crs))
+    df_new.to_file(output_path, driver='GeoJSON')
+    print(f'finished output {output_path}')
+    return
 
