@@ -1,6 +1,6 @@
 # Interative Report - Streamlit App
 
-The app shows the basic aggregated metrics on a map and also offers an intuitive way to review the raw report records
+The app shows the basic aggregated metrics on a map and also offers an intuitive way to review the raw report records. The app also dynamically detects any new reports coming in and can switch between different periods. 
 
 ![](https://github.com/HiIamJeff/project-bank-credit/blob/main/assets/app_part1.gif)
 ![](https://github.com/HiIamJeff/project-bank-credit/blob/main/assets/app_part2.gif)
