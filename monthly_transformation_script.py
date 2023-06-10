@@ -7,6 +7,8 @@ from uszipcode import SearchEngine
 from pyspark.sql import functions as F
 from pyspark.sql import types
 
+from general_utils import get_zipcode_dictionary
+
 
 def monthly_data_transformation(df, spark):
     """
@@ -78,14 +80,6 @@ def get_udf_map_geo():
         types.StructField("major_city", types.StringType(), True)
     ])
     return F.udf(lambda zipcode: dict_zipcode[zipcode], schema_udf)
-
-
-def get_zipcode_dictionary():
-    """ Use uszipcode package to generate mapping (state and major city associated with all zip codes)
-    """
-    zipcodes = SearchEngine().query(zipcode_type=None, returns=100000)
-    dict_zipcode = {z.zipcode: (z.state, z.major_city) for z in zipcodes}
-    return dict_zipcode
 
 
 def generate_mtg_heq_valid_bool_expr():

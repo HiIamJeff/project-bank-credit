@@ -39,9 +39,9 @@ def generate_monthly_report(df, output_path, input_year, month, spark):
     df.createOrReplaceTempView('monthly_credit_score_tmp')
     df_result = spark.sql("""
     SELECT zip5 AS zip5, state AS state
-        , AVG(bankcard_limit) AS bankcard_limit_avg
-        , AVG(bankcard_balance) AS bankcard_balance_avg
-        , AVG(bankcard_trades) AS bankcard_trades_avg
+        , ROUND(SUM(bankcard_limit * person_count) / SUM(person_count), 3) AS bankcard_limit_avg
+        , ROUND(SUM(bankcard_balance * person_count) / SUM(person_count), 3) AS bankcard_balance_avg
+        , ROUND(SUM(bankcard_trades * person_count) / SUM(person_count), 3) AS bankcard_trades_avg
         , COUNT(zip9_code) AS zip9_code_count
         , array_join(collect_set(major_city), ', ') AS covered_major_cities
         , SUM(household_count) AS household_count_total

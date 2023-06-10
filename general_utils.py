@@ -2,6 +2,11 @@
 import time
 from contextlib import contextmanager
 import os
+import warnings
+# suppress warnings from uszipcode
+warnings.filterwarnings("ignore", message="Using slow pure-python SequenceMatcher")
+
+from uszipcode import SearchEngine
 
 
 def time_function(func):
@@ -42,3 +47,11 @@ def generate_available_period():
                     s = y + '/' + m  # 2019/04
                     list_period.append(s)
     return list_period
+
+
+def get_zipcode_dictionary():
+    """ Use uszipcode package to generate mapping (state and major city associated with all zip codes)
+    """
+    zipcodes = SearchEngine().query(zipcode_type=None, returns=100000)
+    dict_zipcode = {z.zipcode: (z.state, z.major_city) for z in zipcodes}
+    return dict_zipcode
