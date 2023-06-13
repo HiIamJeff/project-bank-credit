@@ -17,6 +17,6 @@ The app shows the basic aggregated metrics on a map and also offers an intuitive
 ### Instruction
 To run this, please refer to the `cli_examples.sh`
 
-Please note that you would like to install `streamlit` or `geopandas` before running the Streamlit app or processing shape file yourself. Please refer to their official guides to do that (`requirements.txt` doesn't cover these packages).
+Please note that you would like to install `streamlit` (version `1.23.1`) or `geopandas` (version `0.13.1`) before running the Streamlit app or processing shape file yourself. Please refer to their official guides to do that (`requirements.txt` doesn't cover these packages).
 
 
