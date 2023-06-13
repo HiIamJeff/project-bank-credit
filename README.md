@@ -1,8 +1,6 @@
 # project-bank-credit
 Showcase for modern data engineering with Spark and Polars
 
-### [UNDER DEVELOPMENT for the Polars part]
-
 ### Purpose
 The project is a personal practice and showcase for how pipelines built with [Apache Spark](https://spark.apache.org/) or [Polars](https://www.pola.rs/) can do ETL/ELT. The applications could be run locally or hosted on public cloud services with some modifications. With the appropriate settings, the pipelines could also handle data volume from a few GBs to TB-level data (Spark, specifically). 
 
@@ -11,7 +9,7 @@ Here are a few things that the pipelines cover:
 - Accepting monthly data from a local filesystem (or a data lake on cloud)
 - Cleaning and transforming monthly data with business logic and geographic information 
 - Outputting the results in Parquet for further purposes (analysis or model training)
-- Generating monthly-aggregated reports in CSVs at the end of a job run
+- Generating a monthly report in CSVs at the end of each monthly job
 - Firing a self-service report application (built by [Streamlit](https://streamlit.io/)) that shows a choropleth map with various measures and an interactive dataframe viewer
   - For more details, please check `README.md` in `streamlit_app/`
 - Being able to run jobs for monthly process, full migration (by years), or test mode (with limited records)
@@ -27,9 +25,11 @@ The total data size is about 10 GB. Nonetheless, the pipelines are designed for 
 ### Instruction
 For anyone interested in trying this repo themselves, [the Google Drive folder](https://drive.google.com/drive/u/0/folders/1D-DVKXOFfkN1QkwV8PZ2h83AL8wA6Rov) has sample data. It is the same data but with roughly 0.05% of the records (zip codes only within New York City). Please place them following the Folder Structure section. Though the small data volume may not fully utilize these frameworks, it is still a good starting ground and can be replicated with other big data project.
 
-Please use requirement.txt to create a virtual environment with Python 3.9+ and set up Spark on your machine. For actual Spark application, it is best to run this with Standalone mode (setting up Spark driver/worker, submitting jobs to launch the application). For launching it, please check examples in `cli_examples.sh` (as well as for the Streamlit app)
+Please use `requirement.txt` to create a virtual environment with Python 3.9+ and set up Spark on your machine. For actual Spark application, it is best to run this with Standalone mode (setting up Spark driver/worker, submitting jobs to launch the application). For launching it, please check examples in `cli_examples.sh` (as well as for the Streamlit app)
 
-> p.s. Setting Spark on any environments could be a fuzzy task. You can refer to this [simple guide](https://www.sundog-education.com/spark-python/) or any other resources to set up correctly.
+> p.s.1 Setting Spark on any environments could be a fuzzy task. You can refer to this [simple guide](https://www.sundog-education.com/spark-python/) or any other resources to set up correctly.
+
+> p.s.2 `requirement.txt` here only covers the Spark part. For the polars or the Streamlit part, please refer to their folders ([polars](https://github.com/HiIamJeff/project-bank-credit/tree/main/polars_pipeline), [Streamlit](https://github.com/HiIamJeff/project-bank-credit/tree/main/streamlit_app)) for the guide.
 
 
 ### Folder Structure
@@ -40,6 +40,8 @@ Please use requirement.txt to create a virtual environment with Python 3.9+ and 
 ├── cli_examples.sh
 ├── data
 │   ├── processed
+│   ├── processed_polars
+│   │   └── report
 │   └── source
 │       ├── demographic_data
 │       │   └── zip9_demographics_coded_pv.csv
@@ -52,6 +54,11 @@ Please use requirement.txt to create a virtual environment with Python 3.9+ and 
 ├── general_utils.py
 ├── ingestion_script.py
 ├── monthly_transformation_script.py
+├── polars_pipeline
+│   ├── README.md
+│   ├── ingestion_script.py
+│   ├── monthly_transformation_script.py
+│   └── raw_ingestion.py
 ├── raw_ingestion.py
 ├── requirements.txt
 ├── streamlit_app
