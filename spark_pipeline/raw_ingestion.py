@@ -6,7 +6,7 @@ import argparse
 
 from pyspark.sql import SparkSession
 
-from ingestion_script import monthly_data_ingestion
+from spark_pipeline.ingestion_script import monthly_data_ingestion
 
 
 # for setting python driver and python worker

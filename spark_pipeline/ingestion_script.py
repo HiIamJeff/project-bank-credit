@@ -3,7 +3,7 @@ import os
 from pyspark.sql import types
 
 from general_utils import time_function
-from monthly_transformation_script import monthly_data_transformation
+from spark_pipeline.monthly_transformation_script import monthly_data_transformation
 
 
 @time_function
