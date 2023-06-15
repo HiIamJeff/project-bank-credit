@@ -7,17 +7,17 @@
 # Run the whole year
 spark-submit --master <spark-master-url> --name applicationstream_sample \
 --num-executors 2 --executor-memory 2g \
---driver-memory 2g raw_ingestion.py --input_year=2019 --ingestion_mode=overwrite
+--driver-memory 2g spark_pipeline/raw_ingestion.py --input_year=2019 --ingestion_mode=overwrite
 
 # Run the specific month
 spark-submit --master <spark-master-url> --name applicationstream_sample \
 --num-executors 2 --executor-memory 2g \
---driver-memory 2g raw_ingestion.py --input_year=2019 --ingestion_mode=overwrite --input_month 4
+--driver-memory 2g spark_pipeline/raw_ingestion.py --input_year=2019 --ingestion_mode=overwrite --input_month 4
 
 # Run tests (with limited records)
 spark-submit --master <spark-master-url> --name applicationstream_sample \
 --num-executors 2 --executor-memory 2g \
---driver-memory 2g raw_ingestion.py --input_year=2019 --ingestion_mode=overwrite --input_month 4 --test_run True
+--driver-memory 2g spark_pipeline/raw_ingestion.py --input_year=2019 --ingestion_mode=overwrite --input_month 4 --test_run True
 
 # Run streamlit app (please be sure launch it at the project root directory)
 streamlit run streamlit_app/app.py
