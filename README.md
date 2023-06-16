@@ -52,15 +52,17 @@ Please use `requirement.txt` to create a virtual environment with Python 3.9+ an
 │       ├── zip9_coded_201908_pv.csv
 │       └── zip9_coded_201909_pv.csv
 ├── general_utils.py
-├── ingestion_script.py
-├── monthly_transformation_script.py
 ├── polars_pipeline
 │   ├── README.md
 │   ├── ingestion_script.py
 │   ├── monthly_transformation_script.py
 │   └── raw_ingestion.py
-├── raw_ingestion.py
 ├── requirements.txt
+├── spark_pipeline
+│   ├── README.md
+│   ├── ingestion_script.py
+│   ├── monthly_transformation_script.py
+│   └── raw_ingestion.py
 ├── streamlit_app
 │   ├── README.md
 │   ├── app.py
