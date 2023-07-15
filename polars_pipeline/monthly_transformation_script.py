@@ -4,7 +4,6 @@ import warnings
 # suppress warnings from uszipcode
 warnings.filterwarnings("ignore", message="Using slow pure-python SequenceMatcher")
 
-# from uszipcode import SearchEngine
 from general_utils import get_zipcode_dictionary
 
 
