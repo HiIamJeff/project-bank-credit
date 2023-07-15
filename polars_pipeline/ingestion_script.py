@@ -7,7 +7,8 @@ from polars_pipeline.monthly_transformation_script import monthly_data_transform
 
 
 @time_function
-def monthly_data_ingestion(input_path, output_path, input_year, month, test_run=False):
+def monthly_data_ingestion(input_path: str, output_path: str,
+                           input_year: int, month: int, test_run: bool = False) -> None:
     """ ingestion process for the monthly data
     """
     # read
@@ -36,7 +37,7 @@ def monthly_data_ingestion(input_path, output_path, input_year, month, test_run=
     return
 
 
-def get_schema_monthly():
+def get_schema_monthly() -> dict:
     dict_schema = {
         'zip5': pl.Utf8,
         'zip9_code': pl.Int32,
@@ -96,7 +97,7 @@ def get_schema_monthly():
 
 
 @time_function
-def generate_monthly_report(df, output_path, input_year, month):
+def generate_monthly_report(df: pl.scan_csv, output_path: str, input_year: int, month: int) -> None:
     """ generate a single aggregated monthly report (csv) in the directory.
     """
     df_result = (

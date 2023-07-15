@@ -8,7 +8,7 @@ from polars_pipeline.ingestion_script import monthly_data_ingestion
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input_year', required=True)
+parser.add_argument('--input_year', required=True, type=lambda x: int(x))
 parser.add_argument('--input_month', default=0, required=False,
                     type=lambda x: int(x) if int(x) in range(1, 13) else False)
 parser.add_argument('--test_run', default=False, required=False,

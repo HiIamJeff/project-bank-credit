@@ -4,17 +4,17 @@ import warnings
 # suppress warnings from uszipcode
 warnings.filterwarnings("ignore", message="Using slow pure-python SequenceMatcher")
 
-# from uszipcode import SearchEngine
 from general_utils import get_zipcode_dictionary
 
 
-def monthly_data_transformation(df):
+def monthly_data_transformation(df: pl.scan_csv,
+                                demo_data_dir: str = 'data/source/demographic_data/zip9_demographics_coded_pv.csv') -> pl.scan_csv:
     """
     Process monthly data
     return new data for analysis and future steps (ML pipeline)
+    p.s. optional demo_data_dir is for testing
     """
     # join demographic table
-    demo_data_dir = 'data/source/demographic_data/zip9_demographics_coded_pv.csv'
     df_demo = pl.scan_csv(demo_data_dir, dtypes=get_schema_demo())
 
     # join
@@ -39,7 +39,7 @@ def monthly_data_transformation(df):
     return df_merged
 
 
-def get_schema_demo():
+def get_schema_demo() -> dict:
     dict_schema = {
         'zip5': pl.Utf8,
         'zip9_code': pl.Int32,
@@ -52,7 +52,7 @@ def get_schema_demo():
     return dict_schema
 
 
-def impute_monthly_data(df):
+def impute_monthly_data(df) -> pl.scan_csv:
     """ Basic imputation for monthly data (excluding specific columns)
     """
     list_num_col = [c for c, d in df.schema.items() if d in [pl.Float32, pl.Int32]]
@@ -70,7 +70,7 @@ def impute_monthly_data(df):
     return df
 
 
-def generate_mtg_heq_valid_bool_expr():
+def generate_mtg_heq_valid_bool_expr() -> pl.Expr:
     """ Generate query expression for identifying problematic records based on mortgage/home equity columns
     The logic is that the columns should either have all meaningful numbers (about limit, balance, open) or not at all to make a valid info
     (e.g., a record with any missing info for one specific loan will be labeled as an invalid record, which is False)
@@ -99,7 +99,7 @@ def generate_mtg_heq_valid_bool_expr():
         & list_expr_all[1][0] & list_expr_all[1][1] & list_expr_all[1][2] & list_expr_all[1][3] & list_expr_all[1][4])
 
 
-def count_event_mtg_expr():
+def count_event_mtg_expr() -> pl.Expr:
     """ Generate query expression for counting how many mortgage loan event for a record (up to 5)
     """
     return ((pl.when(pl.col('mortgage1_limit') != 0).then(1).otherwise(0))
@@ -109,8 +109,8 @@ def count_event_mtg_expr():
             + (pl.when(pl.col('mortgage5_limit') != 0).then(1).otherwise(0)))
 
 
-def count_event_heq_expr():
-    """ Generate query expression for counting how many mortgage loan event for a record (up to 5)
+def count_event_heq_expr() -> pl.Expr:
+    """ Generate query expression for counting how many home equity event for a record (up to 5)
     """
     return ((pl.when(pl.col('homeequity1_limit') != 0).then(1).otherwise(0))
             + (pl.when(pl.col('homeequity2_limit') != 0).then(1).otherwise(0))
