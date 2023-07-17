@@ -1,74 +1,48 @@
+import pytest
+from pathlib import Path
 
-import os
+from pyspark.sql import functions as F
 from pyspark.sql import types
-from pyspark.sql import SparkSession
-from pyspark.sql import DataFrame
 
-from general_utils import time_function
 from spark_pipeline.monthly_transformation_script import monthly_data_transformation
+from spark_pipeline.ingestion_script import get_schema_monthly
 
 
-@time_function
-def monthly_data_ingestion(input_path: str, output_path: str, ingestion_mode: str, input_year: int, month: int,
-                           test_run: str, spark: SparkSession) -> None:
-    """ ingestion process for the monthly data
+WORKING_DIR = Path('').resolve()
+PATH_TEST_DIR = Path(WORKING_DIR, 'tests/test_data')
+
+
+def test_spark_monthly_data_transformation(spark) -> None:
+    """ Test the whole polar monthly data transformation
     """
-    # read
-    if test_run:
-        df = spark.read.option('header', True) \
-            .schema(get_schema_monthly()) \
-            .csv(input_path).limit(2000)
-    else:
-        df = spark.read.option('header', True) \
-            .schema(get_schema_monthly()) \
-            .csv(input_path)
+    sample_df = (spark.read.option('header', True)
+                 .schema(get_schema_monthly())
+                 .csv(Path(PATH_TEST_DIR, 'zip9_coded_201904_pv_test.csv').as_posix())
+                 .filter(F.col('zip9_code').isin([703023, 627746, 3779203, 802280, 3471270, 1478042]))
+                 )
 
-    df = monthly_data_transformation(df, spark)
+    demo_data_test_dir = Path(PATH_TEST_DIR, 'zip9_demographics_coded_pv_test.csv').as_posix()
 
-    # write
-    df.repartition(6).write.format("parquet") \
-        .mode(ingestion_mode) \
-        .save(output_path)
+    expected_df = (spark.read.option('header', True)
+                   .schema(get_schema_monthly_processed())
+                   .csv(Path(PATH_TEST_DIR, '201904_monthly_processed_data_expected.csv').as_posix())
+                   )
 
-    # report
-    generate_monthly_report(df, output_path, input_year, month, spark)
+    assert_spark_dataframe_equal(monthly_data_transformation(sample_df, spark, demo_data_dir=demo_data_test_dir),
+                                 expected_df)
     return
 
 
-@time_function
-def generate_monthly_report(df: DataFrame, output_path: str, input_year: int, month: int, spark: SparkSession) -> None:
-    """ generate a single aggregated monthly report (csv) in the directory.
-    """
-    df.createOrReplaceTempView('monthly_credit_score_tmp')
-    df_result = spark.sql("""
-    SELECT zip5 AS zip5, state AS state
-        , ROUND(SUM(bankcard_limit * person_count) / SUM(person_count), 3) AS bankcard_limit_avg
-        , ROUND(SUM(bankcard_balance * person_count) / SUM(person_count), 3) AS bankcard_balance_avg
-        , ROUND(SUM(bankcard_trades * person_count) / SUM(person_count), 3) AS bankcard_trades_avg
-        , COUNT(zip9_code) AS zip9_code_count
-        , array_join(collect_set(major_city), ', ') AS covered_major_cities
-        , SUM(household_count) AS household_count_total
-        , SUM(person_count) AS person_count_total
-        , SUM(homebuyers) AS homebuyers_total
-        , SUM(first_homebuyers) AS first_homebuyers_total
-    FROM monthly_credit_score_tmp
-    GROUP BY zip5, state
-    """)
+def assert_spark_dataframe_equal(df_1, df_2):
+    assert df_1.orderBy(F.asc(F.col('zip9_code'))).collect() == df_2.orderBy(F.asc(F.col('zip9_code'))).collect()
 
-    # create report subdirectory for the report CSV
-    output_path_report = output_path + '/report/'
-    if not os.path.exists(output_path_report):
-        os.mkdir(output_path_report)
-
-    df_result.toPandas().to_csv(output_path_report + f'{input_year}{month:02d}_monthly_report.csv',
-                                index=False)
-
-    # show examples in log
-    df_result.show(5)
+    # ignore nullable
+    assert ([(field.name, field.dataType) for field in df_1.schema.fields] ==
+            [(field.name, field.dataType) for field in df_2.schema.fields])
     return
 
 
-def get_schema_monthly() -> types.StructType:
+def get_schema_monthly_processed():
     schema = types.StructType([
         types.StructField('zip5', types.StringType(), False),
         types.StructField('zip9_code', types.IntegerType(), False),
@@ -123,6 +97,16 @@ def get_schema_monthly() -> types.StructType:
         types.StructField('bankcard_open', types.DoubleType(), True),
         types.StructField('homeequity_open', types.DoubleType(), True),
         types.StructField('mortgage_open', types.DoubleType(), True),
+        types.StructField('age', types.DoubleType(), True),
+        types.StructField('household_count', types.IntegerType(), True),
+        types.StructField('person_count', types.IntegerType(), True),
+        types.StructField('homebuyers', types.IntegerType(), True),
+        types.StructField('first_homebuyers', types.IntegerType(), True),
+        # new fields
+        types.StructField('count_mtg_event', types.IntegerType(), True),
+        types.StructField('count_heq_event', types.IntegerType(), True),
+        types.StructField('mtg_heq_valid_flag', types.BooleanType(), True),
+        types.StructField('state', types.StringType(), True),
+        types.StructField('major_city', types.StringType(), True),
     ])
     return schema
-

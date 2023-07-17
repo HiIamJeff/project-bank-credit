@@ -23,7 +23,7 @@ def time_function(func):
 
 
 @contextmanager
-def cd(new_dir):
+def cd(new_dir: str) -> None:
     """ Change directory with rollback to current working directory after the work is done
     """
     prev_dir = os.getcwd()
@@ -34,10 +34,10 @@ def cd(new_dir):
         os.chdir(prev_dir)
 
 
-def generate_available_period():
+def generate_available_period() -> list:
     """ Generate a list with all available periods ("MM/YYYY") in processed folder for the demo
     """
-    with cd('data/processed/'):
+    with cd('data/processed_spark/'):
         list_dir = [i for i in os.listdir() if i.isnumeric()]
         list_period = []
 
@@ -49,7 +49,7 @@ def generate_available_period():
     return list_period
 
 
-def get_zipcode_dictionary():
+def get_zipcode_dictionary() -> dict:
     """ Use uszipcode package to generate mapping (state and major city associated with all zip codes)
     """
     zipcodes = SearchEngine().query(zipcode_type=None, returns=100000)
