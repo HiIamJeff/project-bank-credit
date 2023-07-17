@@ -3,20 +3,21 @@ import warnings
 # suppress warnings from uszipcode
 warnings.filterwarnings("ignore", message="Using slow pure-python SequenceMatcher")
 
-from uszipcode import SearchEngine
+from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql import types
+from pyspark.sql import DataFrame
 
 from general_utils import get_zipcode_dictionary
 
 
-def monthly_data_transformation(df, spark):
+def monthly_data_transformation(df: DataFrame, spark: SparkSession,
+                                demo_data_dir: str = 'data/source/demographic_data/zip9_demographics_coded_pv.csv') -> DataFrame:
     """
     Process monthly data
     return new data for analysis and future steps (ML pipeline)
     """
     # join demographic table
-    demo_data_dir = 'data/source/demographic_data/zip9_demographics_coded_pv.csv'
     df_demo = (spark.read
                .option('header', True)
                .schema(get_schema_demo())
@@ -46,7 +47,7 @@ def monthly_data_transformation(df, spark):
     return df_merged
 
 
-def get_schema_demo():
+def get_schema_demo() -> types.StructType:
     schema_demo = types.StructType([
         types.StructField('zip5', types.StringType(), False),
         types.StructField('zip9_code', types.IntegerType(), False),
@@ -59,7 +60,7 @@ def get_schema_demo():
     return schema_demo
 
 
-def impute_monthly_data(df):
+def impute_monthly_data(df: DataFrame) -> DataFrame:
     """ Basic imputation for monthly data (excluding specific columns)
     """
     list_num_col = [f.name for f in df.schema.fields if isinstance(f.dataType, (types.DoubleType, types.IntegerType))]
@@ -71,7 +72,7 @@ def impute_monthly_data(df):
     return df
 
 
-def get_udf_map_geo():
+def get_udf_map_geo() -> F.udf:
     """ Generate udf for basic geo information
     """
     dict_zipcode = get_zipcode_dictionary()

@@ -29,11 +29,11 @@ def monthly_data_transformation(df: pl.scan_csv,
         ]
     ).with_columns(
         [
+            count_event_mtg_expr().alias('count_mtg_event'),
+            count_event_heq_expr().alias('count_heq_event'),
+            generate_mtg_heq_valid_bool_expr().alias('mtg_heq_valid_flag'),
             pl.col('geo_state_major_city').list.get(0).alias('state'),
             pl.col('geo_state_major_city').list.get(1).alias('major_city'),
-            count_event_mtg_expr().alias('count_mtg_event'),
-            count_event_mtg_expr().alias('count_heq_event'),
-            generate_mtg_heq_valid_bool_expr().alias('mtg_heq_valid_flag')
         ]
     ).drop('geo_state_major_city').select(pl.col('*')))
     return df_merged
@@ -43,7 +43,7 @@ def get_schema_demo() -> dict:
     dict_schema = {
         'zip5': pl.Utf8,
         'zip9_code': pl.Int32,
-        'age': pl.Float32,
+        'age': pl.Float64,
         'household_count': pl.Int32,
         'person_count': pl.Int32,
         'homebuyers': pl.Int32,
@@ -55,7 +55,7 @@ def get_schema_demo() -> dict:
 def impute_monthly_data(df) -> pl.scan_csv:
     """ Basic imputation for monthly data (excluding specific columns)
     """
-    list_num_col = [c for c, d in df.schema.items() if d in [pl.Float32, pl.Int32]]
+    list_num_col = [c for c, d in df.schema.items() if d in [pl.Float64, pl.Float32, pl.Int32]]
     list_str_col = [c for c, d in df.schema.items() if d in [pl.Utf8]]
 
     list_num_exception = ['bankcard_util', 'total_revolving_util', 'mortgage1_loan_to_value']

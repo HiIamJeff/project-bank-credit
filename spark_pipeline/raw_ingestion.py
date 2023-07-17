@@ -15,7 +15,7 @@ os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input_year', required=True)
+parser.add_argument('--input_year', required=True, type=lambda x: int(x))
 parser.add_argument('--input_month', default=0, required=False,
                     type=lambda x: int(x) if int(x) in range(1, 13) else False)
 parser.add_argument('--ingestion_mode', default='errorifexists', required=False)
@@ -43,7 +43,7 @@ for month in month_range:
     print(f'processing data for {args.input_year}/{month}...')
 
     input_file = Path(WORKING_DIR, RAW_INPUT_DIR, f'zip9_coded_{args.input_year}{month:02d}_pv.csv').as_posix()
-    output_path = Path(WORKING_DIR, f'data/processed/{args.input_year}/{month:02d}/').as_posix()
+    output_path = Path(WORKING_DIR, f'data/processed_spark/{args.input_year}/{month:02d}/').as_posix()
 
     try:
         monthly_data_ingestion(input_path=input_file, output_path=output_path,

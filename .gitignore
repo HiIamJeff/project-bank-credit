@@ -16,9 +16,9 @@ data/source/demographic_data/*
 
 
 
-!data/processed
-data/processed/*
-!data/processed/.gitkeep
+!data/processed_spark
+data/processed_spark/*
+!data/processed_spark/.gitkeep
 
 !data/processed_polars
 data/processed_polars/*
