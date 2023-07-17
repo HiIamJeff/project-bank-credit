@@ -16,7 +16,7 @@ A few things that the pipelines cover:
 - Firing a self-service report application (built by [Streamlit](https://streamlit.io/)) that shows a choropleth map with various measures and an interactive dataframe viewer
   - For more details, please check `README.md` in `streamlit_app/`
 - Being able to run jobs for monthly process, full migration (by years), or test mode (with limited records)
-- The repo is set up with GitHub Action for basic CI (testing the whole transformation with sample data). The user can run `pytest` to do the basic test locally as well (The Spark pipeline one is still in development)
+- The repo is set up with GitHub Action for basic CI (testing the whole transformation with sample data). The user can run `pytest` to do the basic test locally as well
 
 ### Data
 The project is built with US bank credit data.
@@ -24,7 +24,7 @@ The project is built with US bank credit data.
 2.  The second is the demographic data with basic information about consumers at the zip9 level.
 
 The total data size is about 10 GB. Nonetheless, the pipelines are designed for an ongoing monthly process, and they should be able to handle 10x-100x of size with some tweaks in settings.
-> All datasets are from [Brown Datathon 2020 event]((https://dsi.brown.edu/news/2020-03-04/brown-datathon)) and the actual zip9 value has been coded. The datasets are only for educational purposes and are not intended for other purposes.   
+> All datasets are from [Brown Datathon 2020 event](https://dsi.brown.edu/news/2020-03-04/brown-datathon) and the actual zip9 value has been coded. The datasets are only for educational purposes and are not intended for other purposes.   
 
 ### Instruction
 For anyone interested in trying this repo themselves, [the Google Drive folder](https://drive.google.com/drive/u/0/folders/1D-DVKXOFfkN1QkwV8PZ2h83AL8wA6Rov) has sample data. It is the same data but with roughly 0.05% of the records (zip codes only within New York City). Please place them following the Folder Structure section. Though the small data volume may not fully utilize these frameworks, it is still a good starting ground and can be replicated with other big data projects.
@@ -72,12 +72,15 @@ Please use `requirement.txt` to create a virtual environment with Python 3.9 and
 │   ├── streamlit_script.py
 │   └── zipcode_2020_shape_simplified.geojson
 ├── tests
-│   ├── test_data
-│   │   ├── 201904_monthly_processed_data_expected.csv
-│   │   ├── zip9_coded_201904_pv_test.csv
-│   │   └── zip9_demographics_coded_pv_test.csv
-│   └── test_polars.py
-
+│   ├── polars
+│   │   └── test_polars.py
+│   ├── spark
+│   │   ├── conftest.py
+│   │   └── test_spark.py
+│   └── test_data
+│       ├── 201904_monthly_processed_data_expected.csv
+│       ├── zip9_coded_201904_pv_test.csv
+│       └── zip9_demographics_coded_pv_test.csv
 ```
 
 #### Future development
